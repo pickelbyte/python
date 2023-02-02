@@ -28,6 +28,10 @@ def checkwin():
     else:
         win = False
 
+    if win:
+        msg.showinfo(title="Game Over", message=f"{out}'s have won!")
+        resetcmd()
+
 def update(self, txt="-"):
     global out, turnlbl, win
     if self["text"] == '-':
@@ -39,9 +43,6 @@ def update(self, txt="-"):
         turnlbl["text"] = f"{out}'s Turn"
     else:
         self["text"] = self["text"]
-    if win:
-        msg.showinfo(title="Game Over", message=f"{out}'s have won!")
-        resetcmd()
 
 def clear(self):
     self["text"] = '-'
@@ -63,6 +64,10 @@ def resetcmd():
 root = tk.Tk()
 root.title("Tic Tac Toe")
 root.resizable(False, False)
+
+msg.showinfo(title="Startup", message="""
+Press space when you think you won! 
+Press the corresponding button to fill that grid spot with the current turn.""")
 
 #----------------------------------#
 a1 = tk.Label(root, text='-', font=lgfont)
