@@ -27,15 +27,18 @@ def checkwin():
         win = True
     else:
         win = False
-
-    if win:
-        msg.showinfo(title="Game Over", message=f"{out}'s have won!")
+    if win == True:
+        msg.showinfo(title="Game over", message=f"{out}'s win!")
         resetcmd()
+    else:
+        win = False
+
 
 def update(self, txt="-"):
     global out, turnlbl, win
-    if self["text"] == '-':
+    if self["text"] == '-' and not checkwin():
         self["text"] = txt
+        checkwin()
         if out == 'X':
             out = 'O'
         else:
@@ -43,6 +46,7 @@ def update(self, txt="-"):
         turnlbl["text"] = f"{out}'s Turn"
     else:
         self["text"] = self["text"]
+        
 
 def clear(self):
     self["text"] = '-'
@@ -66,7 +70,6 @@ root.title("Tic Tac Toe")
 root.resizable(False, False)
 
 msg.showinfo(title="Startup", message="""
-Press space when you think you won! 
 Press the corresponding button to fill that grid spot with the current turn.""")
 
 #----------------------------------#
