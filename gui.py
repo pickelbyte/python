@@ -1,58 +1,94 @@
 import tkinter as tk
 import csv
 
-with open('airports.csv', newline='') as csvfile:
-    data = list(csv.reader(csvfile))
+with open('airports.csv', newline='', encoding="utf-8") as csvfile:
+    main_data = list(csv.reader(csvfile))
 
-codes = []
-for airport in data:
-    codes.append(airport[0])
+airports = []
 
-names = []
-for airport in data:
-    names.append(airport[1])
+for row in main_data:
+    airports.append(row[0])
 
-countries = []
-for airport in data:
-    countries.append(airport[2])
+def cb_search(event):  
+    search = search_str.get().upper()
+    listbox.delete(0, tk.END)
+    # If filter removed show all data
+    if search == "":
+        fill_listbox(airports) 
+        return
+  
+    filtered_data = list()
+    for item in airports:
+        if item.find(search) >= 0:
+            filtered_data.append(item)
 
-def update(data):
-    results.delete(0, tk.END)
-    for item in data:
-        results.insert(tk.END, item)
+    fill_listbox(filtered_data)   
 
-def fillout(e):
-    searchbar.delete(0, tk.END)
-    searchbar.insert(0, results.get(tk.ANCHOR))
+def fill_listbox(ld):
+    for item in ld:
+        listbox.insert(tk.END, item)
+  
+def ok():
+    pass
 
-def check(e):
-    typed = searchbar.get()
+#second search box
+def cb_search2(event):  
+    search = search_str2.get().upper()
+    listbox2.delete(0, tk.END)
+    # If filter removed show all data
+    if search == "":
+        fill_listbox2(airports) 
+        return
+  
+    filtered_data2 = list()
+    for item in airports:
+        if item.find(search) >= 0:
+            filtered_data2.append(item)
 
-    if typed == '':
-        data = data
-    else:
-	data = []
-        for item in data:
-	    if typed.lower() in item.lower():
-		data.append(item)
-    update(data)
+    fill_listbox2(filtered_data2)   
 
+def fill_listbox2(ld):
+    for item in ld:
+        listbox2.insert(tk.END, item)
+  
+def ok2():
+    pass
+    
+# GUI
 root = tk.Tk()
-root.title("Airport distance calculator")
+root.geometry("720x480")
+root.resizable(False, False)
 
-searchlbl = tk.Label(root, text="Search for an airport")
-searchlbl.pack(pady=20)
+#search box 1
+searchframe = tk.Frame(root, width=360, height=480, bg="grey")
+searchframe.place(x=0, y=0)
+searchframe.pack_propagate(False)
 
-searchbar = tk.Entry(root)
-searchbar.pack(pady=20)
+search_str = tk.StringVar()
+search = tk.Entry(searchframe, textvariable=search_str, width=10)
+search.place(y=5, x=5)
 
-results = tk.Listbox(root, width=30)
-results.pack(pady=5)
+listbox = tk.Listbox(searchframe, width=10, height=25)
+listbox.place(y=25, x=5)
+fill_listbox(airports)
 
-results.bind("<<ListboxSelect>>", fillout)
-searchbar.bind("<KeyRelease>", check)
+ok_btn = tk.Button(searchframe, text="OK", command=ok)
+ok_btn.place(y=430, x=25)
 
-update(data)
+search.bind('<KeyRelease>', cb_search)
 
+#search box 2
+search_str2 = tk.StringVar()
+search2 = tk.Entry(searchframe, textvariable=search_str2, width=10)
+search2.place(y=5, x=75)
+
+listbox2 = tk.Listbox(searchframe, width=10, height=25)
+listbox2.place(y=25, x=75)
+fill_listbox2(airports)
+
+ok_btn2 = tk.Button(searchframe, text="OK", command=ok2)
+ok_btn2.place(y=430, x=90)
+
+search2.bind('<KeyRelease>', cb_search2)
+  
 root.mainloop()
-
